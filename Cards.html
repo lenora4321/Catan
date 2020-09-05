@@ -1,0 +1,87 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Cards - Settlers of Catan</title>
+	</head>
+	<body>
+		<table>
+			<tr>
+				<td rowspan="3" class="key">Settlement:<br /><img src="icons/sheep.svg" alt="Sheep" class="small"> <img src="icons/wheat.svg" alt="Wheat" class="small"> <img src="icons/stone.svg" alt="Stone" class="small"> <img src="icons/wood.svg" alt="Wood" class="small"><br />
+					City:<br /><img src="icons/wheat.svg" alt="Wheat" class="small"> <img src="icons/wheat.svg" alt="Wheat" class="small"> <img src="icons/stone.svg" alt="Stone" class="small"> <img src="icons/stone.svg" alt="Stone" class="small"> <img src="icons/stone.svg" alt="Stone" class="small"><br />
+					Road:<br /><img src="icons/clay.svg" alt="Clay" class="small"> <img src="icons/wood.svg" alt="Wood" class="small"><br />
+					Dev. card:<br /><img src="icons/stone.svg" alt="Stone" class="small"> <img src="icons/sheep.svg" alt="Sheep" class="small"> <img src="icons/wheat.svg" alt="Wheat" class="small">
+				</td>
+				<td style="background-color: #2cab0f"><img src="icons/sheep.svg" alt="Sheep" class="icon"><br />Sheep<br /><input id="sheep"type="number"></td>&nbsp;
+				<td style="background-color: #753f05"><img src="icons/wood.svg" alt="Wood" class="icon"><br />Wood<br /><input id="wood" type="number"></td>&nbsp;
+				<td style="background-color: #5e5e5e"><img src="icons/stone.svg" alt="Stone" class="icon"><br />Stone<br /><input id="stone" type="number"></td>&nbsp;
+				<td style="background-color: #ebd426"><img src="icons/wheat.svg" alt="Wheat" class="icon"><br />Wheat<br /><input id="wheat" type="number"></td>&nbsp;
+				<td style="background-color: #eb5834"><img src="icons/clay.svg" alt="Clay" class="icon"><br />Clay<br /><input id="clay" type="number"></td>&nbsp;
+			</tr>
+			<tr>
+				<td>Knights<br /><input type="number"></td>&nbsp;
+				<td>Year of Plenty<br /><input type="number"></td>&nbsp;
+				<td>Road Building<br /><input type="number"></td>&nbsp;
+				<td>Victory Points<br /><input type="number"></td>&nbsp;
+				<td>Monopoly<br /><input type="number"></td>&nbsp;
+			</tr>
+			<tr>
+				<td>Longest Road<br /><br /><br /><input type="checkbox"></td>&nbsp;
+				<td>Largest Army<br /><br /><br /><input type="checkbox"></td>&nbsp;
+				<td class="steal" colspan=3><button onclick="stealRandomCard()">Steal a random card</button><br />
+					<p>Stolen: <span id="stolen"></span></p>
+					<p>If a resource was taken, please reduce its number by 1 at this time.  Results calculated based upon cards recorded above.</p>
+				</td>
+			</tr>
+		</table>
+	</body>
+	<style>
+	input[type=checkbox]
+		{
+		/* Double-sized Checkboxes */
+		-ms-transform: scale(2); /* IE */
+		-moz-transform: scale(2); /* FF */
+		-webkit-transform: scale(2); /* Safari and Chrome */
+		-o-transform: scale(2); /* Opera */
+		transform: scale(2);
+		padding: 10px;
+		}
+		.icon{
+			height: 100px;
+			width: 100px;
+		}
+		.small{
+			height: 20px;
+			width: 20px;
+		}
+		.key{
+			font-size: x-large;
+			padding-right: 10px;
+		}
+		.steal{
+			padding: 20px;
+		}
+		img{
+			height: 100px;
+			width: 100px;
+		}
+		input{
+			width: 100px;
+		}
+		table{
+			width: 100%;
+			border-spacing: 10px;
+		}
+		td{
+			font-size: large;
+			width: 16%;
+			text-align: center;
+			border: 1px solid black;
+			padding-bottom: 50px;
+			padding-top: 10px;
+		}
+	</style>
+	<footer>
+        <script src="Cards.js"></script>
+    </footer>
+</html>
