@@ -2,7 +2,8 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Cards - Settlers of Catan</title>
+        <title>Cards - Settlers of Catan</title>
+        <link rel="stylesheet" href="General.css"/>
 	</head>
 	<body>
 		<table>
@@ -20,6 +21,9 @@
                     <button onclick="rollDice()">Roll dice</button>
                 </td>
             </tr>
+            <tr>
+                <td colspan="2" id="notice"></td>
+            </tr>
 		</table>
 	</body>
 	<style>
@@ -30,17 +34,6 @@
             width: 100%;
             margin-left: auto;
             margin-right: auto;
-        }
-        .dice {
-            width: 130px;
-            height: 130px;
-            text-align: center;
-        }
-        .a {
-            text-align: right;
-        }
-        .b {
-            text-align: left;
         }
 	</style>
 	<footer>

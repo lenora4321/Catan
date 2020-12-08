@@ -1,0 +1,34 @@
+html, body, a, button{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.dice {
+    width: 130px;
+    height: 130px;
+    text-align: center;
+}
+.a {
+    text-align: right;
+}
+.b {
+    text-align: left;
+}
+input[type=checkbox] {
+    /* Double-sized Checkboxes */
+    transform: scale(2);
+    padding: 10px;
+}
+.icon{
+    height: 100px;
+    width: 100px;
+}
+.small{
+    height: 20px;
+    width: 20px;
+}
+.key{
+    font-size: x-large;
+    padding-right: 10px;
+}
+.steal{
+    padding: 20px;
+}
