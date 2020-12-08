@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Cards - Settlers of Catan</title>
+	</head>
+	<body>
+		<table>
+			<tr>
+                <td class="dice a" id="diceOne"></td>
+                <td class="dice b" id="diceTwo"></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    Result: <span id="result"></span>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button onclick="rollDice()">Roll dice</button>
+                </td>
+            </tr>
+		</table>
+	</body>
+	<style>
+        body {
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .dice {
+            width: 130px;
+            height: 130px;
+            text-align: center;
+        }
+        .a {
+            text-align: right;
+        }
+        .b {
+            text-align: left;
+        }
+	</style>
+	<footer>
+        <script src="Dice.js"></script>
+    </footer>
+</html>
