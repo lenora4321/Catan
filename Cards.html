@@ -5,13 +5,14 @@
         <title>Cards - Settlers of Catan</title>
         <link rel="stylesheet" href="General.css"/>
 	</head>
-	<body>
+	<body onload="displayZeros()">
 		<table>
 			<tr>
 				<td rowspan="3" class="key">Settlement:<br /><img src="icons/sheep.svg" alt="Sheep" class="small"> <img src="icons/wheat.svg" alt="Wheat" class="small"> <img src="icons/stone.svg" alt="Stone" class="small"> <img src="icons/wood.svg" alt="Wood" class="small"><br />
 					City:<br /><img src="icons/wheat.svg" alt="Wheat" class="small"> <img src="icons/wheat.svg" alt="Wheat" class="small"> <img src="icons/stone.svg" alt="Stone" class="small"> <img src="icons/stone.svg" alt="Stone" class="small"> <img src="icons/stone.svg" alt="Stone" class="small"><br />
 					Road:<br /><img src="icons/clay.svg" alt="Clay" class="small"> <img src="icons/wood.svg" alt="Wood" class="small"><br />
-					Dev. card:<br /><img src="icons/stone.svg" alt="Stone" class="small"> <img src="icons/sheep.svg" alt="Sheep" class="small"> <img src="icons/wheat.svg" alt="Wheat" class="small">
+					Dev. card:<br /><img src="icons/stone.svg" alt="Stone" class="small"> <img src="icons/sheep.svg" alt="Sheep" class="small"> <img src="icons/wheat.svg" alt="Wheat" class="small"><br />
+					Boat:<br /><img src="icons/sheep.svg" alt="Sheep" class="small"> <img src="icons/wood.svg" alt="Wood" class="small">
 				</td>
 				<td style="background-color: #2cab0f"><img src="icons/sheep.svg" alt="Sheep" class="icon"><br />Sheep<br /><input id="sheep"type="number"></td>&nbsp;
 				<td style="background-color: #753f05"><img src="icons/wood.svg" alt="Wood" class="icon"><br />Wood<br /><input id="wood" type="number"></td>&nbsp;
@@ -23,15 +24,21 @@
 				<td>Knights<br /><input type="number"></td>&nbsp;
 				<td>Year of Plenty<br /><input type="number"></td>&nbsp;
 				<td>Road Building<br /><input type="number"></td>&nbsp;
-				<td>Victory Points<br /><input type="number"></td>&nbsp;
+				<td>Victory Cards<br /><input id="vc" onclick="calcVPNum()" type="number"></td>&nbsp;
 				<td>Monopoly<br /><input type="number"></td>&nbsp;
 			</tr>
 			<tr>
-				<td>Longest Road<br /><br /><br /><input type="checkbox"></td>&nbsp;
-				<td>Largest Army<br /><br /><br /><input type="checkbox"></td>&nbsp;
-				<td class="steal" colspan=3><button onclick="stealRandomCard()">Steal a random card</button><br />
+				<td>Longest Road<br /><br /><br /><input id="road" value="off" onclick="calcVP(2, 'road')" type="checkbox"></td>&nbsp;
+				<td>Largest Army<br /><br /><br /><input id="army" value="off" onclick="calcVP(2, 'army')" type="checkbox"></td>&nbsp;
+				<td class="steal" colspan=3><button class="steal-btn" onclick="stealRandomCard()">Steal a random card</button><br />
 					<p>Stolen: <span id="stolen"></span></p>
-					<p>If a resource was taken, please reduce its number by 1 at this time.  Results calculated based upon cards recorded above.</p>
+					<p>If a resource was taken, then its value above was decreased by 1.</p>
+				</td>
+			</tr>
+			<tr>
+				<td id="vp-cell" colspan=6>
+					<span class="large">Victory points from here: <span id="vp"></span></span><br /><br />
+					Note that this tally includes only victory point development cards and longest/largest point awards.  Please add this total to your board total (that is, settlements and cities).
 				</td>
 			</tr>
 		</table>
