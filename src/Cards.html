@@ -8,11 +8,11 @@
 	<body onload="displayZeros()">
 		<table>
 			<tr>
-				<td rowspan="3" class="key">Settlement:<br /><img src="icons/sheep.svg" alt="Sheep" class="small"> <img src="icons/wheat.svg" alt="Wheat" class="small"> <img src="icons/stone.svg" alt="Stone" class="small"> <img src="icons/wood.svg" alt="Wood" class="small"><br />
-					City:<br /><img src="icons/wheat.svg" alt="Wheat" class="small"> <img src="icons/wheat.svg" alt="Wheat" class="small"> <img src="icons/stone.svg" alt="Stone" class="small"> <img src="icons/stone.svg" alt="Stone" class="small"> <img src="icons/stone.svg" alt="Stone" class="small"><br />
-					Road:<br /><img src="icons/clay.svg" alt="Clay" class="small"> <img src="icons/wood.svg" alt="Wood" class="small"><br />
-					Dev. card:<br /><img src="icons/stone.svg" alt="Stone" class="small"> <img src="icons/sheep.svg" alt="Sheep" class="small"> <img src="icons/wheat.svg" alt="Wheat" class="small"><br />
-					Boat:<br /><img src="icons/sheep.svg" alt="Sheep" class="small"> <img src="icons/wood.svg" alt="Wood" class="small">
+				<td rowspan="3" class="key"><button onclick="buildItem('settlement')">Settlement</button><br /><img src="icons/sheep.svg" alt="Sheep" class="small"> <img src="icons/wheat.svg" alt="Wheat" class="small"> <img src="icons/stone.svg" alt="Stone" class="small"> <img src="icons/wood.svg" alt="Wood" class="small"><br />
+					<button onclick="buildItem('city')">City</button><br /><img src="icons/wheat.svg" alt="Wheat" class="small"> <img src="icons/wheat.svg" alt="Wheat" class="small"> <img src="icons/stone.svg" alt="Stone" class="small"> <img src="icons/stone.svg" alt="Stone" class="small"> <img src="icons/stone.svg" alt="Stone" class="small"><br />
+					<button onclick="buildItem('road')">Road</button><br /><img src="icons/clay.svg" alt="Clay" class="small"> <img src="icons/wood.svg" alt="Wood" class="small"><br />
+					<button onclick="buildItem('devCard')">Dev. Card</button><br /><img src="icons/stone.svg" alt="Stone" class="small"> <img src="icons/sheep.svg" alt="Sheep" class="small"> <img src="icons/wheat.svg" alt="Wheat" class="small"><br />
+					<button onclick="buildItem('boat')">Boat</button><br /><img src="icons/sheep.svg" alt="Sheep" class="small"> <img src="icons/wood.svg" alt="Wood" class="small">
 				</td>
 				<td style="background-color: #2cab0f"><img src="icons/sheep.svg" alt="Sheep" class="icon"><br />Sheep<br /><input id="sheep"type="number"></td>&nbsp;
 				<td style="background-color: #753f05"><img src="icons/wood.svg" alt="Wood" class="icon"><br />Wood<br /><input id="wood" type="number"></td>&nbsp;
@@ -21,11 +21,11 @@
 				<td style="background-color: #eb5834"><img src="icons/clay.svg" alt="Clay" class="icon"><br />Clay<br /><input id="clay" type="number"></td>&nbsp;
 			</tr>
 			<tr>
-				<td>Knights<br /><input type="number"></td>&nbsp;
-				<td>Year of Plenty<br /><input type="number"></td>&nbsp;
-				<td>Road Building<br /><input type="number"></td>&nbsp;
-				<td>Victory Cards<br /><input id="vc" onclick="calcVPNum()" type="number"></td>&nbsp;
-				<td>Monopoly<br /><input type="number"></td>&nbsp;
+				<td>Knights<br /><input id="knight" type="number"></td>&nbsp;
+				<td>Year of Plenty<br /><input id="yearOfPlenty" type="number"></td>&nbsp;
+				<td>Road Building<br /><input id="roadBuilding" type="number"></td>&nbsp;
+				<td>Victory Cards<br /><input id="victoryCard" onclick="calcVPNum()" type="number"></td>&nbsp;
+				<td>Monopoly<br /><input id="monopoly" type="number"></td>&nbsp;
 			</tr>
 			<tr>
 				<td>Longest Road<br /><br /><br /><input id="road" value="off" onclick="calcVP(2, 'road')" type="checkbox"></td>&nbsp;
