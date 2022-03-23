@@ -39,7 +39,7 @@ function buildItem(item, isTest = false) {
 		document.getElementById(ITEM_RECIPES[item][i]).value--;
 	}
 	
-	if (item == "devCard") {
+	if (item == "devCard" && !isTest) {
 		drawDevCard();
 	}
 	
@@ -68,8 +68,6 @@ function drawDevCard(givenDeck = null) {
 		if (randomNumber <= totalSoFar) {
 			givenDeck[key]--;
 			deck = givenDeck;
-			console.log(key);
-			console.log(document.getElementById(key));
 			document.getElementById(key).value++;
 			return { name: key, deck: deck };
 		}			

@@ -162,7 +162,6 @@ describe("drawDevCard", () => {
 	it("increases corresponding field", () => {
 		var devCard = drawDevCard(deck);
 		for (var i = 0; i < textMap.length; i++) {
-			console.log(textMap[i] + " " + devCard.name);
 			if (textMap[i] == devCard.name) {
 				expect(document.getElementById(textMap[i]).value).toBe(1);
 			} else {
