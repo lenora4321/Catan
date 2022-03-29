@@ -15,38 +15,70 @@ var deck = {
 	"monopoly": 5
 }
 
+// returns { message: string, recipe: array }
 function buildItem(item, isTest = false) { 
+	var retObj = {
+		message: "",
+		recipe: null
+	}
+	var recipe = null;
     if (ITEM_RECIPES[item] == null) {
-		return "Error, invalid item '" + item + "'.";
-	}
-	
-	for (var i = 0; i < POSSIBLES.length; i++) {
-		numberNeeded = 0;
-		for (var j = 0; j < ITEM_RECIPES[item].length; j++) {
-			if (POSSIBLES[i] == ITEM_RECIPES[item][j]) {
-				numberNeeded++;
+		retObj.message = "Error, invalid item '" + item + "'.";
+	} else {
+		var notEnough = false;
+		for (var i = 0; i < POSSIBLES.length; i++) {
+			numberNeeded = 0;
+			for (var j = 0; j < ITEM_RECIPES[item].length; j++) {
+				if (POSSIBLES[i] == ITEM_RECIPES[item][j]) {
+					numberNeeded++;
+				}
+			}
+			if (document.getElementById(POSSIBLES[i]).value < numberNeeded) {
+				retObj.message = "Not enough resources.";
+				notEnough = true;
 			}
 		}
-		if (document.getElementById(POSSIBLES[i]).value < numberNeeded) {
-			if (!isTest) {
-				window.alert("Not enough resources.");
+		
+		if (notEnough) {
+		} else {
+			if (item == "settlement") {
+				var settlementMessage = buildSettlement().message.toLowerCase();
+				if (settlementMessage != "settlement placed.") {
+					retObj.message = settlementMessage;
+				}
+			} else if (item == "city") {
+				console.log("here");
+				var cityMessage = buildCity().message.toLowerCase();
+				if (cityMessage != "city placed.") {
+					retObj.message = cityMessage;
+				}
+			} 
+			
+			if (retObj.message == "") {
+				for (var i = 0; i < ITEM_RECIPES[item].length; i++) {
+					document.getElementById(ITEM_RECIPES[item][i]).value--;
+				}
+				
+				if (item == "devCard" && !isTest) {
+					drawDevCard();
+				}
+				
+				retObj.message = item + " built";
+				retObj.recipe = ITEM_RECIPES[item];
 			}
-			return "Not enough resources."
 		}
 	}
-	
-	for (var i = 0; i < ITEM_RECIPES[item].length; i++) {
-		document.getElementById(ITEM_RECIPES[item][i]).value--;
-	}
-	
-	if (item == "devCard" && !isTest) {
-		drawDevCard();
-	}
-	
-	return ITEM_RECIPES[item];
+	log(retObj.message);
+	return retObj;
 }
 
+// returns { message: string, name: string, deck: object }
 function drawDevCard(givenDeck = null) {
+	var retObj = {
+		message: "",
+		name: "",
+		deck: null
+	}
 	if (givenDeck == null) {
 		givenDeck = deck;
 	}
@@ -57,25 +89,35 @@ function drawDevCard(givenDeck = null) {
 	}
 	
 	if (deckSize <= 0) {
-		return "Cannot draw when empty."
+		retObj.message = "Cannot draw when empty.";
+	} else {
+		var randomNumber = Math.floor(Math.random() * deckSize);
+		
+		var totalSoFar = 0;
+		for (var key of Object.keys(givenDeck)) {
+			totalSoFar += givenDeck[key];
+			if (randomNumber <= totalSoFar) {
+				givenDeck[key]--;
+				deck = givenDeck;
+				document.getElementById(key).value++;
+				retObj.name = key;
+				retObj.deck = deck;
+				break;
+			}			
+		}
+		retObj.message = "Drew dev card.";
 	}
-	
-	var randomNumber = Math.floor(Math.random() * deckSize);
-	
-	var totalSoFar = 0;
-	for (var key of Object.keys(givenDeck)) {
-		totalSoFar += givenDeck[key];
-		if (randomNumber <= totalSoFar) {
-			givenDeck[key]--;
-			deck = givenDeck;
-			document.getElementById(key).value++;
-			return { name: key, deck: deck };
-		}			
-	}
+	log(retObj.message);
+	return retObj;
 }
 
+// returns { message: string, stolen: string }
 function stealRandomCard(){
     var resources = [];
+	var retObj = {
+		message: "",
+		stolen: "",
+	}
 
 	for (var i = 0; i < POSSIBLES.length; i++) {
 		for (var j = 0; j < document.getElementById(POSSIBLES[i]).value; j++) {
@@ -83,21 +125,19 @@ function stealRandomCard(){
 		}
 	}
 
-    var output = "You have no cards to steal.";
-	var broke = true;
-	
-    if (resources.length > 0){
-        output = resources[Math.floor(Math.random() * resources.length)];
-		broke = false;
-    }
-	
-    document.getElementById("stolen").innerHTML = output;
-	
-	if (!broke) {
-		document.getElementById(output).value--;
+	if (resources.length > 0) {
+        retObj.stolen = resources[Math.floor(Math.random() * resources.length)];
+		retObj.message = "One " + retObj.stolen + " was stolen.";
+		document.getElementById(retObj.stolen).value--;
+    } else {
+		retObj.message = "You have no cards to steal.";
 	}
+    
+	log(retObj.message);
+	return retObj;
 }
 
+// returns null
 function displayZeros() {
 	var inputs = document.getElementsByTagName("input");
 	
@@ -110,6 +150,7 @@ function displayZeros() {
 	document.getElementById("vp").innerHTML = 0;
 }
 
+// returns null
 function calcVP(value, id) {
 	var vpElement = document.getElementById("vp");
 	
@@ -123,6 +164,7 @@ function calcVP(value, id) {
 	calcVPNum();
 }
 
+// returns null
 function calcVPNum() {
 	var runningTotal = parseInt(document.getElementById("victoryCard").value);
 	
@@ -130,4 +172,94 @@ function calcVPNum() {
 	if (document.getElementById("army").value == "on") { runningTotal += 2; }
 
 	document.getElementById("vp").innerHTML = runningTotal;
+}
+
+// returns { message: string }
+function useKnight(isTest = false, isLargest = false) {
+	var retObj = {
+		message: ""
+	}
+	var availableKnights = document.getElementById("knight");
+	
+	if (parseInt(availableKnights.value) <= 0) {
+		retObj.message = "No knights to play.";
+	} else {
+		var knightsPlayed = document.getElementById("knightsPlayed");
+		var largestArmy = document.getElementById("army");
+		
+		knightsPlayed.value = parseInt(knightsPlayed.value) + 1;
+		availableKnights.value = parseInt(availableKnights.value) - 1;
+		retObj.message = "Knight played.";
+		
+		if (parseInt(knightsPlayed.value) >= 3) {
+			if (largestArmy.value == "off") {
+				if (isTest) {
+					if (isLargest) {
+						largestArmy.value = "on";
+						largestArmy.checked = true;
+					}
+				} else {
+					if(window.confirm("Do you now have largest army?")) {
+						largestArmy.value = "on";
+						largestArmy.checked = true;
+					}
+				}
+				retObj.message = "Largest army prompted.";
+			}
+		}
+	}
+		
+	log(retObj.message);
+	return retObj;
+}
+
+// returns { message: string }
+function buildSettlement() {
+	var settlements = document.getElementById("settlements");
+	var retObj = {
+		message: ""
+	}
+	if (parseInt(settlements.value) >= 5) {
+		retObj.message = "Max settlements reached.";
+	} else {
+		settlements.value = parseInt(settlements.value) + 1;
+		retObj.message = "Settlement placed.";
+		increaseVP(1);
+	}
+	log(retObj.message);
+	return retObj;
+}
+
+// returns { message: string }
+function buildCity() {
+	var retObj = {
+		message: ""
+	}
+	var settlements = document.getElementById("settlements");
+	var cities = document.getElementById("cities");
+
+	if (parseInt(settlements.value) <= 0) {
+		retObj.message = "No settlements to replace.";
+	} else if (parseInt(cities.value) >= 4) {
+		retObj.message = "Max cities reached.";
+	} else {
+		settlements.value = parseInt(settlements.value) - 1;
+		cities.value = parseInt(cities.value) + 1;
+		retObj.message = "City placed.";
+		increaseVP(1);
+	}
+	log(retObj.message);
+	return retObj;
+}
+
+function increaseVP(by) {
+	document.getElementById("vp").value = parseInt(document.getElementById("vp").value) + by;
+}
+
+function log(content) {
+	console.log(content);
+	var output = document.getElementById("output");
+	output.innerHTML = content;
+	output.classList.remove("normal");
+	setTimeout(() => {output.classList.add("normal");}, 1000);
 }

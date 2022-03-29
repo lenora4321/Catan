@@ -6,7 +6,7 @@
         <link rel="stylesheet" href="General.css"/>
 	</head>
 	<body onload="displayZeros()">
-		<table>
+		<table class="cards">
 			<tr>
 				<td rowspan="3" class="key"><button onclick="buildItem('settlement')">Settlement</button><br /><img src="icons/sheep.svg" alt="Sheep" class="small"> <img src="icons/wheat.svg" alt="Wheat" class="small"> <img src="icons/stone.svg" alt="Stone" class="small"> <img src="icons/wood.svg" alt="Wood" class="small"><br />
 					<button onclick="buildItem('city')">City</button><br /><img src="icons/wheat.svg" alt="Wheat" class="small"> <img src="icons/wheat.svg" alt="Wheat" class="small"> <img src="icons/stone.svg" alt="Stone" class="small"> <img src="icons/stone.svg" alt="Stone" class="small"> <img src="icons/stone.svg" alt="Stone" class="small"><br />
@@ -14,56 +14,41 @@
 					<button onclick="buildItem('devCard')">Dev. Card</button><br /><img src="icons/stone.svg" alt="Stone" class="small"> <img src="icons/sheep.svg" alt="Sheep" class="small"> <img src="icons/wheat.svg" alt="Wheat" class="small"><br />
 					<button onclick="buildItem('boat')">Boat</button><br /><img src="icons/sheep.svg" alt="Sheep" class="small"> <img src="icons/wood.svg" alt="Wood" class="small">
 				</td>
-				<td style="background-color: #2cab0f"><img src="icons/sheep.svg" alt="Sheep" class="icon"><br />Sheep<br /><input id="sheep"type="number"></td>&nbsp;
-				<td style="background-color: #753f05"><img src="icons/wood.svg" alt="Wood" class="icon"><br />Wood<br /><input id="wood" type="number"></td>&nbsp;
-				<td style="background-color: #5e5e5e"><img src="icons/stone.svg" alt="Stone" class="icon"><br />Stone<br /><input id="stone" type="number"></td>&nbsp;
-				<td style="background-color: #ebd426"><img src="icons/wheat.svg" alt="Wheat" class="icon"><br />Wheat<br /><input id="wheat" type="number"></td>&nbsp;
-				<td style="background-color: #eb5834"><img src="icons/clay.svg" alt="Clay" class="icon"><br />Clay<br /><input id="clay" type="number"></td>&nbsp;
+				<td style="background-color: #2cab0f"><img src="icons/sheep.svg" alt="Sheep" class="icon"><br />Sheep<br /><input id="sheep"type="number"></td>
+				<td style="background-color: #753f05"><img src="icons/wood.svg" alt="Wood" class="icon"><br />Wood<br /><input id="wood" type="number"></td>
+				<td style="background-color: #5e5e5e"><img src="icons/stone.svg" alt="Stone" class="icon"><br />Stone<br /><input id="stone" type="number"></td>
+				<td style="background-color: #ebd426"><img src="icons/wheat.svg" alt="Wheat" class="icon"><br />Wheat<br /><input id="wheat" type="number"></td>
+				<td style="background-color: #eb5834"><img src="icons/clay.svg" alt="Clay" class="icon"><br />Clay<br /><input id="clay" type="number"></td>
 			</tr>
 			<tr>
-				<td>Knights<br /><input id="knight" type="number"></td>&nbsp;
-				<td>Year of Plenty<br /><input id="yearOfPlenty" type="number"></td>&nbsp;
-				<td>Road Building<br /><input id="roadBuilding" type="number"></td>&nbsp;
-				<td>Victory Cards<br /><input id="victoryCard" onclick="calcVPNum()" type="number"></td>&nbsp;
-				<td>Monopoly<br /><input id="monopoly" type="number"></td>&nbsp;
+				<td>Knights&nbsp;<button onClick="useKnight()">Play knight</button><br /><input id="knight" type="number"></td>
+				<td>Year of Plenty<br /><input id="yearOfPlenty" type="number"></td>
+				<td>Road Building<br /><input id="roadBuilding" type="number"></td>
+				<td>Victory Cards<br /><input id="victoryCard" onclick="calcVPNum()" type="number"></td>
+				<td>Monopoly<br /><input id="monopoly" type="number"></td>
 			</tr>
 			<tr>
-				<td>Longest Road<br /><br /><br /><input id="road" value="off" onclick="calcVP(2, 'road')" type="checkbox"></td>&nbsp;
-				<td>Largest Army<br /><br /><br /><input id="army" value="off" onclick="calcVP(2, 'army')" type="checkbox"></td>&nbsp;
-				<td class="steal" colspan=3><button class="steal-btn" onclick="stealRandomCard()">Steal a random card</button><br />
-					<p>Stolen: <span id="stolen"></span></p>
-					<p>If a resource was taken, then its value above was decreased by 1.</p>
+				<td>Longest Road<br /><input id="road" value="off" onclick="calcVP(2, 'road')" type="checkbox"></td>
+				<td>Largest Army<br /><input id="army" value="off" onclick="calcVP(2, 'army')" type="checkbox"></td>
+				<td class="steal" colspan=2><button class="steal-btn" onclick="stealRandomCard()">Steal a random card</button></td>
+				<td><span id="output" class="highlight"></span></td>
+			</tr>
+			<tr class="readonlyBox">
+				<td id="vp-cell" colspan=3>
+					<span class="large">Victory points: <input readonly id="vp" value="0" /></span>
 				</td>
-			</tr>
-			<tr>
-				<td id="vp-cell" colspan=6>
-					<span class="large">Victory points from here: <span id="vp"></span></span><br /><br />
-					Note that this tally includes only victory point development cards and longest/largest point awards.  Please add this total to your board total (that is, settlements and cities).
+				<td>
+					Settlements:<br /><input readonly id="settlements" value="0" />
+				</td>
+				<td>
+					Cities:<br /><input readonly id="cities" value="0">
+				</td>
+				<td>
+					Knights played:<br /><input readonly id="knightsPlayed" value="0">
 				</td>
 			</tr>
 		</table>
 	</body>
-	<style>
-		img{
-			height: 100px;
-			width: 100px;
-		}
-		input{
-			width: 100px;
-		}
-		table{
-			width: 100%;
-			border-spacing: 10px;
-		}
-		td{
-			font-size: large;
-			width: 16%;
-			text-align: center;
-			border: 1px solid black;
-			padding-bottom: 50px;
-			padding-top: 10px;
-		}
-	</style>
 	<footer>
         <script src="Cards.js"></script>
     </footer>
