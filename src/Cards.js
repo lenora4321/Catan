@@ -172,12 +172,10 @@ function calcVP(value, id) {
 // returns null
 function calcVPNum() {
 	var runningTotal = parseInt(document.getElementById("victoryCard").value);
-	console.log(runningTotal);
 	
 	runningTotal += parseInt(document.getElementById("settlements").value);
 	runningTotal += parseInt(document.getElementById("cities").value) * 2;
 	
-
 	if (document.getElementById("road").value == "on") { runningTotal += 2; }
 	if (document.getElementById("army").value == "on") { runningTotal += 2; }
 	
