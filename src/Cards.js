@@ -157,28 +157,44 @@ function displayZeros() {
 	document.getElementById("vp").innerHTML = 0;
 }
 
-// returns null
-function calcVP(value, id) {
-	var vpElement = document.getElementById("vp");
-	
-	if (document.getElementById(id).value == "off") {
-		document.getElementById(id).value = "on";
-	} else {
-		document.getElementById(id).value = "off";
+// returns { message: string }
+function calcVP(id) {
+	var retObj = {
+		message: "",
 	}
-	calcVPNum();
+	var nameMap = {
+		army: "Largest army",
+		road: "Longest road"
+	}
+	if (id == "army" && parseInt(document.getElementById("knightsPlayed").value) < 3) {
+		retObj.message = nameMap[id] + " requires at least 3 knights.";
+		document.getElementById(id).checked = false;
+	//} else if (id == "road") // TODO && parseInt(document.getElementById("roadsBuilt").value) < 5) {
+	//	retObj.message = nameMap[id] + " requires at least 5 roads.";
+	} else {
+		if (document.getElementById(id).value == "off") {
+			document.getElementById(id).value = "on";
+			retObj.message = nameMap[id] + " activated.";
+		} else {
+			document.getElementById(id).value = "off";
+			retObj.message = nameMap[id] + " deactivated.";
+			
+		}
+	}
+	log(retObj.message);
+	return retObj;
 }
 
 // returns null
 function calcVPNum() {
 	var runningTotal = parseInt(document.getElementById("victoryCard").value);
 	
-	runningTotal += parseInt(document.getElementById("settlements").value);
-	runningTotal += parseInt(document.getElementById("cities").value) * 2;
-	
+	if (isNaN(runningTotal)) { runningTotal = 0; }	
 	if (document.getElementById("road").value == "on") { runningTotal += 2; }
 	if (document.getElementById("army").value == "on") { runningTotal += 2; }
 	
+	runningTotal += parseInt(document.getElementById("settlements").value);
+	runningTotal += parseInt(document.getElementById("cities").value) * 2;
 
 	document.getElementById("vp").value = runningTotal;
 }
@@ -210,7 +226,7 @@ function useKnight(isTest = false, isLargest = false) {
 				} else {
 					setTimeout(() => {
 						if(window.confirm("You have played " + knightsPlayed.value + " knights.\nDo you now have largest army?")) {
-						calcVP(2, 'army');
+						calcVP('army');
 						largestArmy.checked = true;
 					}
 					}, 300);
@@ -266,9 +282,23 @@ function buildCity() {
 
 function log(content) {
 	calcVPNum();
-	console.log(content);
-	var output = document.getElementById("output");
-	output.innerHTML = content;
-	output.classList.remove("normal");
-	setTimeout(() => {output.classList.add("normal");}, 1000);
+	if (content != "") {
+		console.log(content);
+		var output = document.getElementById("output");
+		output.innerHTML = content;
+		output.classList.remove("normal");
+		setTimeout(() => {output.classList.add("normal");}, 1000);
+	} else {
+		console.log("Recieved empty log string.");
+	}
+}
+
+function inc(id) {
+	document.getElementById(id).value = parseInt(document.getElementById(id).value) + 1;
+}
+
+function dec(id) {
+	if (parseInt(document.getElementById(id).value) > 0) {
+		document.getElementById(id).value = parseInt(document.getElementById(id).value) - 1;
+	}
 }

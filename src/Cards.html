@@ -14,24 +14,49 @@
 					<button onclick="buildItem('devCard')">Dev. Card</button><br /><img src="icons/stone.svg" alt="Stone" class="small"> <img src="icons/sheep.svg" alt="Sheep" class="small"> <img src="icons/wheat.svg" alt="Wheat" class="small"><br />
 					<button onclick="buildItem('boat')">Boat</button><br /><img src="icons/sheep.svg" alt="Sheep" class="small"> <img src="icons/wood.svg" alt="Wood" class="small">
 				</td>
-				<td style="background-color: #2cab0f"><img src="icons/sheep.svg" alt="Sheep" class="icon"><br />Sheep<br /><input id="sheep"type="number"></td>
-				<td style="background-color: #753f05"><img src="icons/wood.svg" alt="Wood" class="icon"><br />Wood<br /><input id="wood" type="number"></td>
-				<td style="background-color: #5e5e5e"><img src="icons/stone.svg" alt="Stone" class="icon"><br />Stone<br /><input id="stone" type="number"></td>
-				<td style="background-color: #ebd426"><img src="icons/wheat.svg" alt="Wheat" class="icon"><br />Wheat<br /><input id="wheat" type="number"></td>
-				<td style="background-color: #eb5834"><img src="icons/clay.svg" alt="Clay" class="icon"><br />Clay<br /><input id="clay" type="number"></td>
+				<td style="background-color: #2cab0f">
+					<img src="icons/sheep.svg" alt="Sheep" class="icon"><br />Sheep<br />
+					<button class="incDec" onclick="dec('sheep')">-</button>
+					<input id="sheep"type="number" />
+					<button class="incDec" onclick="inc('sheep')">+</button>
+				</td>
+				<td style="background-color: #753f05">
+					<img src="icons/wood.svg" alt="Wood" class="icon"><br />Wood<br />
+					<button class="incDec" onclick="dec('wood')">-</button>
+					<input id="wood" type="number" />
+					<button class="incDec" onclick="inc('wood')">+</button>
+				</td>
+				<td style="background-color: #5e5e5e">
+					<img src="icons/stone.svg" alt="Stone" class="icon"><br />Stone<br />
+					<button class="incDec" onclick="dec('stone')">-</button>
+					<input id="stone" type="number" />
+					<button class="incDec" onclick="inc('stone')">+</button>
+				</td>
+				<td style="background-color: #ebd426">
+					<img src="icons/wheat.svg" alt="Wheat" class="icon"><br />Wheat<br />
+					<button class="incDec" onclick="dec('wheat')">-</button>
+					<input id="wheat" type="number" />
+					<button class="incDec" onclick="inc('wheat')">+</button>
+				</td>
+				<td style="background-color: #eb5834">
+					<img src="icons/clay.svg" alt="Clay" class="icon"><br />Clay<br />
+					<button class="incDec" onclick="dec('clay')">-</button>
+					<input id="clay" type="number" />
+					<button class="incDec" onclick="inc('clay')">+</button>
+				</td>
 			</tr>
 			<tr>
-				<td>Knights&nbsp;<button onClick="useKnight()">Play knight</button><br /><input id="knight" type="number"></td>
+				<td>Knights&nbsp;<button onClick="useKnight()" class="play">Play</button><br /><input id="knight" type="number"></td>
 				<td>Year of Plenty<br /><input id="yearOfPlenty" type="number"></td>
 				<td>Road Building<br /><input id="roadBuilding" type="number"></td>
-				<td>Victory Cards<br /><input id="victoryCard" onchange="calcVPNum()" type="number"></td>
 				<td>Monopoly<br /><input id="monopoly" type="number"></td>
+				<td>Victory Cards<br /><input id="victoryCard" onchange="calcVPNum()" type="number"></td>
 			</tr>
 			<tr>
-				<td>Longest Road<br /><input id="road" value="off" onchange="calcVP(2, 'road')" type="checkbox"></td>
-				<td>Largest Army<br /><input id="army" value="off" onchange="calcVP(2, 'army')" type="checkbox"></td>
-				<td><span id="output" class="highlight"></span></td>
-				<td class="steal" colspan=2><button class="steal-btn" onclick="stealRandomCard()">Steal a random card</button></td>
+				<td>Longest Road<br /><input id="road" value="off" onchange="calcVP('road')" type="checkbox"></td>
+				<td>Largest Army<br /><input id="army" value="off" onchange="calcVP('army')" type="checkbox"></td>
+				<td class="steal"><button class="steal-btn" onclick="stealRandomCard()">Activate robber</button></td>
+				<td  colspan=2>Latest message:<br /><span id="output" class="highlight"></span></td>
 			</tr>
 			<tr class="readonlyBox">
 				<td id="vp-cell" colspan=3>

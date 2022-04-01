@@ -1,5 +1,15 @@
-html, body, a, button{
+html, body, a, button {
     font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+button {
+	border-radius: 5px;
+	transition: all 1s ease;
+	font-size: inherit;
+}
+
+button:hover {
+	background-color: lightgray;
 }
 
 html, body {
@@ -14,26 +24,24 @@ th {
 	color: red;
 }
 
-.dice {
-    width: 130px;
-    height: 130px;
-    text-align: center;
-}
-
-.a {
-    text-align: right;
-}
-
-.b {
-    text-align: left;
-}
-
 input[type=checkbox] {
     /* Double-sized Checkboxes */
     height: 3vw;
 	border-radius: 20px;
 	margin-top: 1rem;
 	width: 5rem;
+}
+
+input[type=number] {
+	font-size: 1.2rem;
+	border-radius: 5px;
+	margin-top: 10px;
+	width: 3rem;
+}
+
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button {
+	/* Get rid of input box arrows */
+	-webkit-appearance: none;
 }
 
 .icon {
@@ -55,15 +63,10 @@ input[type=checkbox] {
     padding: 20px;
 }
 
-input[type=number] {
-	font-size: 1.2rem;
-	border-radius: 5px;
-	margin-top: 10px;
-	width: 5rem;
-}
-
-.steal-btn {
-	font-size: 1rem;
+.dice {
+    width: 130px;
+    height: 130px;
+    text-align: center;
 }
 
 .large {
@@ -71,13 +74,11 @@ input[type=number] {
 }
 
 .key button {
-	font-family: inherit;
-	background-color: transparent;
-	border: none;
-	font-size: inherit;
-	border: 2px solid black;
-	border-radius: 10px;
 	margin: 5px;
+}
+
+.play {
+	font-size: .75rem;
 }
 
 .cards {
@@ -106,17 +107,21 @@ input[type=number] {
 	border-radius: 30px;	
 }
 
-#output {
-	padding: 5px;
-	text-align: center;
-}
-
 .highlight {
-	color: red;
+	color: coral;
 }
-
 
 .normal {
 	color: gray;
 	transition: all 1s;
+}
+
+.incDec {
+	width: 2vw;
+	height: 2vw;
+}
+
+#output {
+	padding: 5px;
+	text-align: center;
 }
