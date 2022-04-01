@@ -24,14 +24,14 @@
 				<td>Knights&nbsp;<button onClick="useKnight()">Play knight</button><br /><input id="knight" type="number"></td>
 				<td>Year of Plenty<br /><input id="yearOfPlenty" type="number"></td>
 				<td>Road Building<br /><input id="roadBuilding" type="number"></td>
-				<td>Victory Cards<br /><input id="victoryCard" onclick="calcVPNum()" type="number"></td>
+				<td>Victory Cards<br /><input id="victoryCard" onchange="calcVPNum()" type="number"></td>
 				<td>Monopoly<br /><input id="monopoly" type="number"></td>
 			</tr>
 			<tr>
-				<td>Longest Road<br /><input id="road" value="off" onclick="calcVP(2, 'road')" type="checkbox"></td>
-				<td>Largest Army<br /><input id="army" value="off" onclick="calcVP(2, 'army')" type="checkbox"></td>
-				<td class="steal" colspan=2><button class="steal-btn" onclick="stealRandomCard()">Steal a random card</button></td>
+				<td>Longest Road<br /><input id="road" value="off" onchange="calcVP(2, 'road')" type="checkbox"></td>
+				<td>Largest Army<br /><input id="army" value="off" onchange="calcVP(2, 'army')" type="checkbox"></td>
 				<td><span id="output" class="highlight"></span></td>
+				<td class="steal" colspan=2><button class="steal-btn" onclick="stealRandomCard()">Steal a random card</button></td>
 			</tr>
 			<tr class="readonlyBox">
 				<td id="vp-cell" colspan=3>

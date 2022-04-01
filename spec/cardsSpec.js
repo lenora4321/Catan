@@ -16,7 +16,10 @@ describe("buildItem", () => {
 		"settlements": 1,
 		"cities": 1,
 		"vp": 0,
-		"output": ""
+		"output": "",
+		"victoryCard": 0,
+		"road": "off",
+		"army": "off"
 	}
 
 	beforeEach(function(){
@@ -129,7 +132,13 @@ describe("buildItem", () => {
 describe("drawDevCard", () => {
 	var deck, body;
 	var elementsToMake = {
-		"output": ""
+		"output": "",
+		"victoryCard": 0,
+		"road": "off",
+		"army": "off",
+		"settlements": 0,
+		"cities": 0,
+		"vp": 0
 	}
 
 	beforeEach(function(){
@@ -210,13 +219,19 @@ describe("drawDevCard", () => {
 	});
 });
 
-
+/*
 describe("didWin", () => {
 	var body, victoryPoints, output;
 	
 	var elementsToMake = {
 		"vp": 0,
-		"output": ""
+		"output": "",
+		"victoryCard": 0,
+		"road": "off",
+		"army": "off",
+		"settlements": 0,
+		"cities" 0,
+		"vp": 0
 	}
 
 	beforeEach(function(){
@@ -256,6 +271,7 @@ describe("didWin", () => {
 		}
 	});
 });
+*/
 
 describe("knightsPlayed", () => {
 	var body, victoryPoints, knights, knightsPlayed, largestArmy;
@@ -263,7 +279,13 @@ describe("knightsPlayed", () => {
 		"knight": 1,
 		"knightsPlayed": 1,
 		"army": "off",
-		"output": ""
+		"output": "",
+		"victoryCard": 0,
+		"road": "off",
+		"army": "off",
+		"settlements": 0,
+		"cities": 0,
+		"vp": 0
 	}
 
 	beforeEach(function(){
@@ -370,7 +392,10 @@ describe("buildSettlement and buildCity", () => {
 		"settlements": 0,
 		"cities": 0,
 		"vp": 0,
-		"output": ""
+		"output": "",
+		"victoryCard": 0,
+		"road": "off",
+		"army": "off"
 	}
 
 	beforeEach(function(){
@@ -449,6 +474,7 @@ describe("buildSettlement and buildCity", () => {
 	
 	it("it adds VP when settlement built", () => {	
 		settlements.value = 3;
+		calcVPNum();
 	
 		var before = parseInt(victoryPoints.value);
 		
@@ -468,7 +494,8 @@ describe("buildSettlement and buildCity", () => {
 	it("it adds VP when settlement built", () => {	
 		settlements.value = 3;
 		cities.value = 2;
-	
+		
+		calcVPNum();
 		var before = parseInt(victoryPoints.value);
 		
 		var response = buildCity();

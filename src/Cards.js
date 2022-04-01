@@ -7,6 +7,14 @@ const ITEM_RECIPES = {
 	boat: ["sheep", "wood"]
 }
 
+const TEXT_MAP = {
+	devCard: "Development card",
+	settlement: "Settlement",
+	city: "City",
+	road: "Road",
+	boat: "Boat"
+}
+
 var deck = {
 	"knight": 14,
 	"victoryCard": 5,
@@ -47,7 +55,6 @@ function buildItem(item, isTest = false) {
 					retObj.message = settlementMessage;
 				}
 			} else if (item == "city") {
-				console.log("here");
 				var cityMessage = buildCity().message.toLowerCase();
 				if (cityMessage != "city placed.") {
 					retObj.message = cityMessage;
@@ -63,7 +70,7 @@ function buildItem(item, isTest = false) {
 					drawDevCard();
 				}
 				
-				retObj.message = item + " built";
+				retObj.message = TEXT_MAP[item] + " built.";
 				retObj.recipe = ITEM_RECIPES[item];
 			}
 		}
@@ -155,10 +162,8 @@ function calcVP(value, id) {
 	var vpElement = document.getElementById("vp");
 	
 	if (document.getElementById(id).value == "off") {
-		vpElement.innerHTML = parseInt(vpElement.innerHTML) + value;
 		document.getElementById(id).value = "on";
 	} else {
-		vpElement.innerHTML = parseInt(vpElement.innerHTML) - value;
 		document.getElementById(id).value = "off";
 	}
 	calcVPNum();
@@ -167,11 +172,17 @@ function calcVP(value, id) {
 // returns null
 function calcVPNum() {
 	var runningTotal = parseInt(document.getElementById("victoryCard").value);
+	console.log(runningTotal);
 	
+	runningTotal += parseInt(document.getElementById("settlements").value);
+	runningTotal += parseInt(document.getElementById("cities").value) * 2;
+	
+
 	if (document.getElementById("road").value == "on") { runningTotal += 2; }
 	if (document.getElementById("army").value == "on") { runningTotal += 2; }
+	
 
-	document.getElementById("vp").innerHTML = runningTotal;
+	document.getElementById("vp").value = runningTotal;
 }
 
 // returns { message: string }
@@ -199,10 +210,13 @@ function useKnight(isTest = false, isLargest = false) {
 						largestArmy.checked = true;
 					}
 				} else {
-					if(window.confirm("Do you now have largest army?")) {
-						largestArmy.value = "on";
+					setTimeout(() => {
+						if(window.confirm("You have played " + knightsPlayed.value + " knights.\nDo you now have largest army?")) {
+						calcVP(2, 'army');
 						largestArmy.checked = true;
 					}
+					}, 300);
+					
 				}
 				retObj.message = "Largest army prompted.";
 			}
@@ -224,7 +238,7 @@ function buildSettlement() {
 	} else {
 		settlements.value = parseInt(settlements.value) + 1;
 		retObj.message = "Settlement placed.";
-		increaseVP(1);
+		calcVPNum();
 	}
 	log(retObj.message);
 	return retObj;
@@ -246,17 +260,14 @@ function buildCity() {
 		settlements.value = parseInt(settlements.value) - 1;
 		cities.value = parseInt(cities.value) + 1;
 		retObj.message = "City placed.";
-		increaseVP(1);
 	}
+	
 	log(retObj.message);
 	return retObj;
 }
 
-function increaseVP(by) {
-	document.getElementById("vp").value = parseInt(document.getElementById("vp").value) + by;
-}
-
 function log(content) {
+	calcVPNum();
 	console.log(content);
 	var output = document.getElementById("output");
 	output.innerHTML = content;
