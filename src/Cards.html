@@ -14,7 +14,7 @@
 					<button onclick="buildItem('devCard')">Dev. Card</button><br /><img src="icons/stone.svg" alt="Stone" class="small"> <img src="icons/sheep.svg" alt="Sheep" class="small"> <img src="icons/wheat.svg" alt="Wheat" class="small"><br />
 					<button onclick="buildItem('boat')">Boat</button><br /><img src="icons/sheep.svg" alt="Sheep" class="small"> <img src="icons/wood.svg" alt="Wood" class="small">
 				</td>
-				<td style="background-color: #2cab0f">
+				<td id="foo" style="background-color: #2cab0f">
 					<img src="icons/sheep.svg" alt="Sheep" class="icon"><br />Sheep<br />
 					<button class="incDec" onclick="dec('sheep')">-</button>
 					<input id="sheep"type="number" />
@@ -53,7 +53,7 @@
 				<td>Victory Cards<br /><input id="victoryCard" onchange="calcVPNum()" type="number"></td>
 			</tr>
 			<tr>
-				<td>Longest Road<br /><input id="road" value="off" onchange="calcVP('road')" type="checkbox"></td>
+				<td>Longest Road<br /><input id="longestRoad" value="off" onchange="calcVP('road')" type="checkbox"></td>
 				<td>Largest Army<br /><input id="army" value="off" onchange="calcVP('army')" type="checkbox"></td>
 				<td class="steal"><button class="steal-btn" onclick="stealRandomCard()">Activate robber</button></td>
 				<td  colspan=2>Latest message:<br /><span id="output" class="highlight"></span></td>

@@ -169,7 +169,7 @@ function calcVP(id) {
 	if (id == "army" && parseInt(document.getElementById("knightsPlayed").value) < 3) {
 		retObj.message = nameMap[id] + " requires at least 3 knights.";
 		document.getElementById(id).checked = false;
-	//} else if (id == "road") // TODO && parseInt(document.getElementById("roadsBuilt").value) < 5) {
+	//} else if (id == "longestRoad") // TODO && parseInt(document.getElementById("roadsBuilt").value) < 5) {
 	//	retObj.message = nameMap[id] + " requires at least 5 roads.";
 	} else {
 		if (document.getElementById(id).value == "off") {
@@ -190,7 +190,7 @@ function calcVPNum() {
 	var runningTotal = parseInt(document.getElementById("victoryCard").value);
 	
 	if (isNaN(runningTotal)) { runningTotal = 0; }	
-	if (document.getElementById("road").value == "on") { runningTotal += 2; }
+	if (document.getElementById("longestRoad").value == "on") { runningTotal += 2; }
 	if (document.getElementById("army").value == "on") { runningTotal += 2; }
 	
 	runningTotal += parseInt(document.getElementById("settlements").value);
@@ -283,7 +283,7 @@ function buildCity() {
 function log(content) {
 	calcVPNum();
 	if (content != "") {
-		console.log(content);
+		//console.log(content);
 		var output = document.getElementById("output");
 		output.innerHTML = content;
 		output.classList.remove("normal");
@@ -301,4 +301,119 @@ function dec(id) {
 	if (parseInt(document.getElementById(id).value) > 0) {
 		document.getElementById(id).value = parseInt(document.getElementById(id).value) - 1;
 	}
+}
+
+// returns { message: string }
+function playMonopoly() {
+	var retObj = {
+		message: ""
+	}
+	var monopolyCards = document.getElementById("monopoly");
+	if (parseInt(monopolyCards.value) > 0) {
+		promptResourceChoice();
+		var resource = getResourceOptionsSelection().resource;	
+		promptNumberStolen(resource);
+		var numberStolen = submitNumberStolen().number;
+		monopolyCards.value = parseInt(monopolyCards.value) - 1;
+		document.getElementById(resource).value = parseInt(document.getElementById(resource).value) + numberStolen;
+		retObj.message = "Monopoly card played.";
+	} else {
+		retObj.message = "No monopoly cards to play.";
+	}
+	
+	log(retObj.message);
+	return retObj;
+}
+
+// returns { message: string }
+function promptResourceChoice() {
+	var body = document.getElementsByTagName("body")[0];
+	var promptScreen = insertElement(body, "div", { id: "promptScreen" });
+	for (var i = 0; i < POSSIBLES.length; i++) {
+		var params = { 
+			type: "radio", 
+			name: "resourceOptions", 
+			id: POSSIBLES[i] + "Option", 
+			value: POSSIBLES[i]
+		}
+		if (POSSIBLES[i] == "sheep") {
+			params["checked"] = true;
+		}
+		insertElement(promptScreen, "input", params);
+	}
+	var submitButton = insertElement(promptScreen, "button", { "onclick": "getResourceOptionsSelection()" });
+	submitButton.innerHTML = "submit";
+	
+	return { message: "Prompt screen displayed." };
+}
+
+// returns { message: string, resource: string }
+function getResourceOptionsSelection() {
+	var retObj = {
+		message: "",
+		resource: null
+	}
+	var options = document.getElementsByName("resourceOptions");
+	for (var i = 0; i < options.length; i++) {
+		if (options[i].checked ) {
+			retObj.message = options[i].value + " selected for monopoly."
+			retObj.resource = options[i].value;
+		}
+	}
+	document.getElementsByTagName("body")[0].removeChild(document.getElementById("promptScreen"));
+	
+	return retObj;
+}
+	
+// returns { message: string }
+function promptNumberStolen(resource) {
+	var body = document.getElementsByTagName("body")[0];
+	var promptScreen = insertElement(body, "div", { id: "promptScreen" });
+	var title = insertElement(promptScreen, "div", { id: "promptTitle" });
+	title.innerHTML = "Please enter the number of " + resource + " received from other players.";
+	insertElement(promptScreen, "input", { type: "number", id: "numberStolenVal" });
+	var submitButton = insertElement(promptScreen, "button", { "onclick": "getResourceOptionsSelection()" });
+	submitButton.innerHTML = "submit";
+	
+	return { message: "Prompt screen displayed." };
+}
+
+// returns { message: string, number: int }
+function submitNumberStolen(isTest = false) {
+	var retObj = {
+		message: "",
+		number: null
+	}
+	var numberStolen = document.getElementById("numberStolenVal");
+	if (parseInt(numberStolen.value)< 0) {
+		retObj.message = "Cannot steal negative resources.";
+		if (false) {//if (!isTest) {
+			window.alert(retObj.message);
+		}
+	} else {
+
+		retObj.message = "Monopoly number acquired is " + parseInt(numberStolen.value) + ".";
+		retObj.number = parseInt(numberStolen.value);
+		document.getElementsByTagName("body")[0].removeChild(document.getElementById("promptScreen"));
+	}
+	return retObj;
+}
+
+function insertElement(parentEl, type, params) {
+	var el = document.createElement(type);
+	for (var key in params) {
+		el.setAttribute(key, params[key]);		
+	}
+	parentEl.appendChild(el);
+	return el;
+}
+
+function testMe() {
+	var body = document.getElementsByTagName("body")[0];
+	var promptScreen = insertElement(body, "div", { id: "promptScreen" });
+	for (var i = 0; i < allResources.length; i++) {
+		insertElement(promptScreen, "input", { type: "radio", name: "resourceOptions", id: allResources[i], value: allResources[i] });
+	}
+	var submitButton = insertElement(promptScreen, "button", { "onclick": "getResourceOptionsSelection()" });
+	submitButton.innerHTML = "submit";
 }
