@@ -308,95 +308,98 @@ function playMonopoly() {
 	var retObj = {
 		message: ""
 	}
+	
 	var monopolyCards = document.getElementById("monopoly");
 	if (parseInt(monopolyCards.value) > 0) {
-		promptResourceChoice();
-		var resource = getResourceOptionsSelection().resource;	
-		promptNumberStolen(resource);
-		var numberStolen = submitNumberStolen().number;
-		monopolyCards.value = parseInt(monopolyCards.value) - 1;
-		document.getElementById(resource).value = parseInt(document.getElementById(resource).value) + numberStolen;
-		retObj.message = "Monopoly card played.";
+		var body = document.getElementsByTagName("body")[0];
+		var outerBox = insertElement(body, "div", { id: "outerBox", "class": "outerBox" });
+		var promptScreen = insertElement(outerBox, "div", { id: "promptScreen", "class": "popup" });
+		var title = insertElement(promptScreen, "div", { id: "promptTitle" });
+		title.innerHTML = "Please select the resource you wish to steal from other players.";
+		var parentEl = insertElement(promptScreen, "select", { id: "resourceOptions" });
+		for (var i = 0; i < POSSIBLES.length; i++) {
+			var params = { 
+				value: POSSIBLES[i]
+			}
+			if (POSSIBLES[i] == "sheep") {
+				params["selected"] = "selected";
+			}
+			var el = insertElement(parentEl, "option", params);
+			el.innerHTML = POSSIBLES[i];
+		}
+		var submitButton = insertElement(promptScreen, "button", { "onclick": "submitMonopolyResource()" });
+		submitButton.innerHTML = "submit";
 	} else {
 		retObj.message = "No monopoly cards to play.";
 	}
 	
 	log(retObj.message);
-	return retObj;
-}
-
-// returns { message: string }
-function promptResourceChoice() {
-	var body = document.getElementsByTagName("body")[0];
-	var promptScreen = insertElement(body, "div", { id: "promptScreen" });
-	for (var i = 0; i < POSSIBLES.length; i++) {
-		var params = { 
-			type: "radio", 
-			name: "resourceOptions", 
-			id: POSSIBLES[i] + "Option", 
-			value: POSSIBLES[i]
-		}
-		if (POSSIBLES[i] == "sheep") {
-			params["checked"] = true;
-		}
-		insertElement(promptScreen, "input", params);
-	}
-	var submitButton = insertElement(promptScreen, "button", { "onclick": "getResourceOptionsSelection()" });
-	submitButton.innerHTML = "submit";
-	
-	return { message: "Prompt screen displayed." };
+	return retObj;	
 }
 
 // returns { message: string, resource: string }
-function getResourceOptionsSelection() {
+function submitMonopolyResource() {
 	var retObj = {
 		message: "",
 		resource: null
 	}
-	var options = document.getElementsByName("resourceOptions");
-	for (var i = 0; i < options.length; i++) {
-		if (options[i].checked ) {
+	
+	var options = document.getElementById("resourceOptions");
+	for (var i = 0; i < options.children.length; i++) {
+
+		if (options[i].selected) {
 			retObj.message = options[i].value + " selected for monopoly."
 			retObj.resource = options[i].value;
 		}
 	}
-	document.getElementsByTagName("body")[0].removeChild(document.getElementById("promptScreen"));
+	document.getElementsByTagName("body")[0].removeChild(document.getElementById("outerBox"));
 	
+	promptMonopolyNumberStolen(retObj.resource);
 	return retObj;
 }
 	
 // returns { message: string }
-function promptNumberStolen(resource) {
+function promptMonopolyNumberStolen(resource) {
+	var retObj = {
+		message: "Prompt screen displayed.",
+		resource: resource
+	}
 	var body = document.getElementsByTagName("body")[0];
-	var promptScreen = insertElement(body, "div", { id: "promptScreen" });
+	var outerBox = insertElement(body, "div", { id: "outerBox", "class": "outerBox" });
+	var promptScreen = insertElement(outerBox, "div", { id: "promptScreen", "class": "popup" });	
 	var title = insertElement(promptScreen, "div", { id: "promptTitle" });
 	title.innerHTML = "Please enter the number of " + resource + " received from other players.";
 	insertElement(promptScreen, "input", { type: "number", id: "numberStolenVal" });
-	var submitButton = insertElement(promptScreen, "button", { "onclick": "getResourceOptionsSelection()" });
+	insertElement(promptScreen, "input", { type: "hidden", id: "resourceStolen", value: resource });
+	var submitButton = insertElement(promptScreen, "button", { "onclick": "submitMonopolyNumberStolen()" });
 	submitButton.innerHTML = "submit";
 	
-	return { message: "Prompt screen displayed." };
+	return retObj;
 }
 
 // returns { message: string, number: int }
-function submitNumberStolen(isTest = false) {
+function submitMonopolyNumberStolen() {
 	var retObj = {
 		message: "",
 		number: null
 	}
-	var numberStolen = document.getElementById("numberStolenVal");
-	if (parseInt(numberStolen.value)< 0) {
+	var numberStolen = parseInt(document.getElementById("numberStolenVal").value);
+	if (parseInt(numberStolen) < 0) {
 		retObj.message = "Cannot steal negative resources.";
-		if (false) {//if (!isTest) {
-			window.alert(retObj.message);
-		}
 	} else {
-
+		var resource = document.getElementById("resourceStolen").value;
 		retObj.message = "Monopoly number acquired is " + parseInt(numberStolen.value) + ".";
-		retObj.number = parseInt(numberStolen.value);
-		document.getElementsByTagName("body")[0].removeChild(document.getElementById("promptScreen"));
+		retObj.number = parseInt(numberStolen);
+		document.getElementsByTagName("body")[0].removeChild(document.getElementById("outerBox"));
+		document.getElementById("monopoly").value = parseInt(document.getElementById("monopoly").value) - 1;
+		
+		var resourceElement = document.getElementById(resource);
+		resourceElement.value = parseInt(resourceElement.value) + numberStolen;
+		retObj.message = "Monopoly card played.";
 	}
-	return retObj;
+	
+	log(retObj.message);
+	return retObj;	
 }
 
 function insertElement(parentEl, type, params) {
@@ -408,12 +411,70 @@ function insertElement(parentEl, type, params) {
 	return el;
 }
 
-function testMe() {
-	var body = document.getElementsByTagName("body")[0];
-	var promptScreen = insertElement(body, "div", { id: "promptScreen" });
-	for (var i = 0; i < allResources.length; i++) {
-		insertElement(promptScreen, "input", { type: "radio", name: "resourceOptions", id: allResources[i], value: allResources[i] });
+// returns { message: string }
+function playYearOfPlenty() {
+	var retObj = {
+		message: ""
 	}
-	var submitButton = insertElement(promptScreen, "button", { "onclick": "getResourceOptionsSelection()" });
-	submitButton.innerHTML = "submit";
+	
+	var yearOfPlentyCards = document.getElementById("yearOfPlenty");
+	if (parseInt(yearOfPlentyCards.value) > 0) {
+		var body = document.getElementsByTagName("body")[0];
+		var outerBox = insertElement(body, "div", { id: "outerBox", "class": "outerBox" });
+		var promptScreen = insertElement(outerBox, "div", { id: "promptScreen", "class": "popup" });
+		var title = insertElement(promptScreen, "div", { id: "promptTitle" });
+		title.innerHTML = "Please the two resources you would like to receive.";
+		var selections = ["first", "second"];
+		for (var i = 0; i < selections.length; i++) {
+			var parentEl = insertElement(promptScreen, "select", { id: selections[i] });
+			for (var j = 0; j < POSSIBLES.length; j++) {
+				var params = { 
+					value: POSSIBLES[j]
+				}
+				if (POSSIBLES[j] == "sheep") {
+					params["selected"] = "selected";
+				}
+				var el = insertElement(parentEl, "option", params);
+				el.innerHTML = POSSIBLES[j];
+			}
+		}
+		
+		var submitButton = insertElement(promptScreen, "button", { "onclick": "submitPlentyResources()" });
+		submitButton.innerHTML = "submit";
+	} else {
+		retObj.message = "No year of plenty cards to play.";
+	}
+	
+	log(retObj.message);
+	return retObj;
+}
+
+// returns { message: string, selections: [string] }
+function submitPlentyResources() {
+	var retObj = {
+		message: "",
+		selections: []
+	}
+	var yearOfPlentyCards = document.getElementById("yearOfPlenty");
+
+	var selectionIds = ["first", "second"];
+	for (var i = 0; i < selectionIds.length; i++) {
+		var parentEl = document.getElementById(selectionIds[i]);
+		for (var j = 0; j < parentEl.children.length; j++) {
+			if (parentEl[j].selected ) {
+				retObj.selections[i] = parentEl[j].value;
+			}
+		}
+	}
+	
+	retObj.message = "Year of plenty card played.";
+	document.getElementsByTagName("body")[0].removeChild(document.getElementById("outerBox"));
+	
+	yearOfPlentyCards.value = parseInt(yearOfPlentyCards.value) - 1;
+	for (var i = 0; i < retObj.selections.length; i++) {
+		document.getElementById(retObj.selections[i]).value = parseInt(document.getElementById(retObj.selections[i]).value) + 1;
+	}
+	
+	log(retObj.message);
+	return retObj;
 }

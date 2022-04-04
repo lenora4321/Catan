@@ -278,7 +278,6 @@ describe("knightsPlayed", () => {
 	beforeEach(function(){
 		body = document.getElementsByTagName("body")[0];
 		
-		console.log(elementsToMake);
 		for (var key in elementsToMake) {
 			element = document.createElement("div");
 			element.id = key;
@@ -518,128 +517,126 @@ describe("playMonopoly", () => {
 		wood = document.getElementById("wood");
 		clay = document.getElementById("clay");
 		monopolyCards = document.getElementById("monopoly");
-		if (document.getElementById("promptScreen") != null) {
-			body.removeChild(document.getElementById("promptScreen"));
+		if (document.getElementById("outerBox") != null) {
+			body.removeChild(document.getElementById("outerBox"));
 		}
 	});
 	
-	it("removes a monopoly from inventory", () => {
+	it("removes a monopoly from inventory and calls associated method", () => {
 		var beforeValue = parseInt(monopolyCards.value);
-		
-		var selectPromptSpy = spyOn(window, 'promptResourceChoice').and.callThrough();
-		var selectSpy = spyOn(window, 'getResourceOptionsSelection').and.returnValue({ resource: "sheep" });
-		var numberPromptSpy = spyOn(window, 'promptNumberStolen').and.callThrough();
-		var numberSpy = spyOn(window, 'submitNumberStolen').and.returnValue({ number: 5 });
-		
-		playMonopoly(true);
-		expect(parseInt(monopolyCards.value)).toBe(beforeValue - 1);
-	});
-	
-	it("calls all associated methods", () => {
-		var selectPromptSpy = spyOn(window, 'promptResourceChoice').and.callThrough();
-		var selectSpy = spyOn(window, 'getResourceOptionsSelection').and.returnValue({ resource: "sheep" });
-		var numberPromptSpy = spyOn(window, 'promptNumberStolen').and.callThrough();
-		var numberSpy = spyOn(window, 'submitNumberStolen').and.returnValue({ number: 5 });
+		var numberPromptSpy = spyOn(window, 'promptMonopolyNumberStolen').and.callThrough();
 		
 		playMonopoly();
+		submitMonopolyResource();
+		document.getElementById("numberStolenVal").value = 5;
+		submitMonopolyNumberStolen();
 		
-		expect(selectPromptSpy).toHaveBeenCalled();
-		expect(selectSpy).toHaveBeenCalled();
+		monopolyCards = document.getElementById("monopoly");
+		console.log(monopolyCards.value);
+		expect(parseInt(monopolyCards.value)).toBe(beforeValue - 1);
 		expect(numberPromptSpy).toHaveBeenCalled();
-		expect(numberSpy).toHaveBeenCalled();
 	});
 	
 	it("logs and increases proper val", () => {
-		var beforeVal = parseInt(sheep.value);
-		var stealVal = 5;
+		var beforeValue = parseInt(monopolyCards.value);
+		var numberPromptSpy = spyOn(window, 'promptMonopolyNumberStolen').and.callThrough();
+		var numberToSteal = 5;
 		
-		var selectPromptSpy = spyOn(window, 'promptResourceChoice').and.callThrough();
-		var selectSpy = spyOn(window, 'getResourceOptionsSelection').and.returnValue({ resource: "sheep" });
-		var numberPromptSpy = spyOn(window, 'promptNumberStolen').and.callThrough();
-		var numberSpy = spyOn(window, 'submitNumberStolen').and.returnValue({ number: 5 });
-		
-		var response = playMonopoly();
+		playMonopoly();
+		submitMonopolyResource();
+		document.getElementById("numberStolenVal").value = numberToSteal;
+		var response = submitMonopolyNumberStolen();
 		
 		expect(response.message.toLowerCase()).toEqual("monopoly card played.");
-		expect(parseInt(sheep.value)).toBe(beforeVal + stealVal);
+		for (var i = 0; i < allResources.length; i++) {
+			if (allResources[i] == "sheep") {
+				expect(parseInt(document.getElementById(allResources[i]).value)).toBe(elementsToMake[allResources[i]] + numberToSteal);
+			} else {
+				expect(parseInt(document.getElementById(allResources[i]).value)).toBe(elementsToMake[allResources[i]]);
+			}
+		}	
 	});
 	
 	it("cannot be played when none in inventory", () => {
-		var selectPromptSpy = spyOn(window, 'promptResourceChoice').and.callThrough();
-		var selectSpy = spyOn(window, 'getResourceOptionsSelection').and.returnValue({ resource: "sheep" });
-		var numberPromptSpy = spyOn(window, 'promptNumberStolen').and.callThrough();
-		var numberSpy = spyOn(window, 'submitNumberStolen').and.returnValue({ number: 5 });
+		monopolyCards.value = 0;
 		
-		document.getElementById("monopoly").value = 0;
+		var submitResourceSpy = spyOn(window, 'submitMonopolyResource').and.callThrough();
+		var numberPromptSpy = spyOn(window, 'promptMonopolyNumberStolen').and.callThrough();
+		var submitNumberSpy = spyOn(window, 'submitMonopolyNumberStolen').and.callThrough();
 		
 		var response = playMonopoly();
 		expect(response.message.toLowerCase()).toEqual("no monopoly cards to play.");
+		for (var i = 0; i < allResources.length; i++) {
+			expect(parseInt(document.getElementById(allResources[i]).value)).toBe(elementsToMake[allResources[i]]);
+		}
 		
-		expect(selectPromptSpy).not.toHaveBeenCalled();
-		expect(selectSpy).not.toHaveBeenCalled();
+		expect(submitResourceSpy).not.toHaveBeenCalled();
 		expect(numberPromptSpy).not.toHaveBeenCalled();
-		expect(numberSpy).not.toHaveBeenCalled();
+		expect(submitNumberSpy).not.toHaveBeenCalled();
 	});
 	
 	it("prompt screen appears and has correct options", () => {
 		var promptScreen = document.getElementById("promptScreen");
 		expect(promptScreen).toEqual(null);
-		promptResourceChoice();
+		playMonopoly();
 		promptScreen = document.getElementById("promptScreen");
 		expect(promptScreen).not.toEqual(null);
 		
-		for (var i = 0; i < allResources.length; i++) {
-			var foundElement = document.getElementById(allResources[i] + "Option");
-			expect(foundElement).not.toEqual(null);
-			expect(foundElement.tagName.toLowerCase()).toEqual("input");
-			expect(foundElement.type.toLowerCase()).toEqual("radio");
-			expect(foundElement.name).toEqual("resourceOptions");
-			
-			if (allResources[i] == "sheep") {
-				expect(foundElement.checked).toBe(true); // sheep is default
+		var parentEl = document.getElementById("resourceOptions");
+		expect(parentEl).not.toEqual(null);
+		expect(parentEl.tagName.toLowerCase()).toEqual("select");				
+				
+		for (var i = 0; i < parentEl.children; i++) {
+			expect(allResources.includes(parentEl[i].value)).toBe(true);
+			expect(foundElement.children[i].tagName.toLowerCase()).toEqual("option");
+			if (parentEl[i].value == "sheep") {
+				expect(parentEl[i].selected).toEqual("selected"); // sheep is default
 			}
 		}
-		expect(promptScreen.children.length).toBe(allResources.length + 1);
+		expect(parentEl.children.length).toBe(allResources.length);
 	});
 	
-	it("prompt screen selection defaults to sheep, removes prompt screen", () => {
-		promptResourceChoice();
-		var response = getResourceOptionsSelection(); // asks for sheep by default
+	it("submit resource defaults to sheep, removes prompt screen", () => {
+		playMonopoly();
+		var response = submitMonopolyResource();
 		
+		var resourceOptions = document.getElementById("resourceOptions");
+		expect(resourceOptions).toEqual(null);
+
 		var promptScreen = document.getElementById("promptScreen");
-		expect(promptScreen).toEqual(null);
+		expect(promptScreen).not.toEqual(null);
 		expect(response.resource).toEqual("sheep");
 	});
 	
 	it("number stolen screen pre-fills with selected val", () => {
 		var promptScreen = document.getElementById("promptScreen");
 		expect(promptScreen).toEqual(null);
-		promptNumberStolen("sheep");
+		promptMonopolyNumberStolen("sheep");
 		promptScreen = document.getElementById("promptScreen");
 		expect(promptScreen).not.toEqual(null);
 		expect(document.getElementById("promptTitle").innerHTML).toMatch(/.*sheep.*/);
-		
-		
 	});
 	
 	it("submit number stolen gets correct value", () => {
-		promptNumberStolen("sheep");
+		promptMonopolyNumberStolen("sheep");
+		var stolenVal = 3;
 		var promptScreen = document.getElementById("promptScreen");
 		expect(promptScreen).not.toEqual(null);
-		document.getElementById("numberStolenVal").value = 3;
-		var number = submitNumberStolen().number;
-		expect(number).toBe(3);
+		document.getElementById("numberStolenVal").value = stolenVal;
+		var response = submitMonopolyNumberStolen("sheep");
+		console.log(response);
+		expect(response.number).toBe(stolenVal);
 		promptScreen = document.getElementById("promptScreen");
 		expect(promptScreen).toEqual(null);
 	});
 	
 	it("number stolen cannot be negative", () => {
 		var beforeVal = parseInt(sheep.value);
-		promptNumberStolen("sheep");
+		promptMonopolyNumberStolen("sheep");
 		var promptScreen = document.getElementById("promptScreen");
 		expect(promptScreen).not.toEqual(null);
 		document.getElementById("numberStolenVal").value = -1;
-		var response = submitNumberStolen();
+		var response = submitMonopolyNumberStolen();
 		expect(sheep.value).toBe(beforeVal);
 		expect(promptScreen).not.toEqual(null);
 		expect(response.message.toLowerCase()).toEqual("cannot steal negative resources.");
@@ -649,8 +646,8 @@ describe("playMonopoly", () => {
 		for (var key in elementsToMake) {
 			body.removeChild(document.getElementById(key));
 		}	
-		if (document.getElementById("promptScreen") != null) {
-			body.removeChild(document.getElementById("promptScreen"));
+		if (document.getElementById("outerBox") != null) {
+			body.removeChild(document.getElementById("outerBox"));
 		}
 	});
 });
@@ -675,108 +672,88 @@ describe("playYearOfPlenty", () => {
 		wood = document.getElementById("wood");
 		clay = document.getElementById("clay");
 		yearOfPlentyCards = document.getElementById("yearOfPlenty");
-	});
-	
-	it("removes a year of plenty from inventory", () => {
-		var beforeValue = parseInt(yearOfPlentyCards.value);
-		playYearOfPlenty();
-		expect(parseInt(yearOfPlentyCards.value)).toBe(beforeValue - 1);
-	});
-	
-	it("calls all associated methods", () => {
-		var promptSpy = spyOn(window, 'promptPlentyResources').and.callThrough();
-		var submitSpy = spyOn(window, 'submitPlentyResources').and.returnValue(["sheep", "stone"]);
 		
-		var response = playYearOfPlenty();
-		
-		expect(prompSpy).toHaveBeenCalled();
-		expect(submitSpy).toHaveBeenCalled();
-	});
-	
-	it("logs and increases proper val", () => {
-		var selections = ["sheep", "stone"];
-		var promptSpy = spyOn(window, 'promptPlentyResources').and.callThrough();
-		var submitSpy = spyOn(window, 'submitPlentyResources').and.returnValue(selections);
-		
-		var response = playYearOfPlenty();
-		
-		expect(response.resources).toEqual(selections);
-		expect(response.message).toEqual("year of plenty played.");
-		
-		for (var i = 0; i < allResources.length; i++) {
-			if (selections.includes(allResources[i])) {
-				expect(document.getElementById(allResources[i])).toBe(elementsToMake[allResources[i]] + 1);
-			} else {
-				expect(document.getElementById(allResources[i])).toBe(elementsToMake[allResources[i]]);
-			}
+		if (document.getElementById("outerBox") != null) {
+			body.removeChild(document.getElementById("outerBox"));
 		}
 	});
 	
 	it("cannot be played when none in inventory", () => {
-		var selections = ["sheep", "stone"];
-		var promptSpy = spyOn(window, 'promptPlentyResources').and.callThrough();
-		var submitSpy = spyOn(window, 'submitPlentyResources').and.returnValue(selections);
-		
+		yearOfPlentyCards.value = 0;
 		var response = playYearOfPlenty();
 		
-		expect(response.message).toEqual("no year of plenty cards to play.");
-		expect(prompSpy).not.toHaveBeenCalled();
-		expect(submitSpy).not.toHaveBeenCalled();
-		
+		expect(response.message.toLowerCase()).toEqual("no year of plenty cards to play.");
 		for (var i = 0; i < allResources.length; i++) {
-			expect(document.getElementById(allResources[i])).toBe(elementsToMake[allResources[i]]);
+			expect(parseInt(document.getElementById(allResources[i]).value)).toBe(elementsToMake[allResources[i]]);
 		}
 	});
 	
 	it("prompt screen appears and has correct options", () => {
 		var promptScreen = document.getElementById("promptScreen");
 		expect(promptScreen).toEqual(null);
-		promptPlentyResources();
+		playYearOfPlenty();
 		promptScreen = document.getElementById("promptScreen");
-		exepct(promptScreen).not.toEqual(null);
+		expect(promptScreen).not.toEqual(null);
 		
-		for (var i = 0; i < allResources.length; i++) {
-			var first = document.getElementById("first");
-			expect(first).not.toEqual(null);
-			expect(first.tagName).toEqual("select");
-			
-			for (var j = 0; j < first.children; j++) {
-				expect(allResources.includes(first[j].value)).toBe(true);
-				expect(foundElement.children[j].tagName).toEqual("option");
-				if (first[j].value == "sheep") {
-					expect(first[j].selected).toEqual("selected"); // sheep is default
-				}	
-			}	
-
-			var second = document.getElementById("second");
-			expect(second).not.toEqual(null);
-			expect(second.tagName).toEqual("select");
-			
-			for (var j = 0; j < second.children; j++) {
-				expect(allResources.includes(second[j].value)).toBe(true);
-				expect(foundElement.children[j].tagName).toEqual("option");
-				if (second[j].value == "sheep") {
-					expect(second[j].selected).toEqual("selected"); // sheep is default
-				}	
-			}	
-
-			expect(first.children.length).toBe(allResources.length);
-			expect(second.children.length).toBe(allResources.length);						
+		var searchIds = ["first", "second"];
+		for (var i = 0; i < searchIds.length; i++) {
+			var parentEl = document.getElementById(searchIds[i]);
+			expect(parentEl).not.toEqual(null);
+			expect(parentEl.tagName.toLowerCase()).toEqual("select");				
+				
+			for (var j = 0; j < parentEl.children; j++) {
+				expect(allResources.includes(parentEl[j].value)).toBe(true);
+				expect(foundElement.children[j].tagName.toLowerCase()).toEqual("option");
+				if (parentEl[j].value == "sheep") {
+					expect(parentEl[j].selected).toEqual("selected"); // sheep is default
+				}
+			}
+			expect(parentEl.children.length).toBe(allResources.length);
 		}
 	});
 	
 	it("prompt screen selection defaults to sheep, removes prompt screen", () => {
-		promptPlentyResources();
+		playYearOfPlenty();
 		var response = submitPlentyResources(); // asks for sheep by default
 		
 		var promptScreen = document.getElementById("promptScreen");
-		exepct(promptScreen).toEqual(null);
-		expect(response.resources).toEqual(["sheep", "sheep"]);
+		expect(promptScreen).toEqual(null);
+		console.log(response);
+		expect(response.selections).toEqual(["sheep", "sheep"]);
+	});
+	
+	
+	it("submit button logs and adds correct correct resources", () => {
+		var selections = ["sheep", "sheep"];
+		playYearOfPlenty();
+		var response = submitPlentyResources();
+		
+		expect(response.selections).toEqual(selections);
+		expect(response.message.toLowerCase()).toEqual("year of plenty card played.");
+		
+		for (var i = 0; i < allResources.length; i++) {
+			if (allResources[i] == "sheep") {
+				expect(parseInt(document.getElementById(allResources[i]).value)).toBe(elementsToMake[allResources[i]] + 2);
+			} else {
+				expect(parseInt(document.getElementById(allResources[i]).value)).toBe(elementsToMake[allResources[i]]);
+			}
+		}
+	});
+	
+	it("submit button removes one monopoly card from inventory", () => {
+		var beforeValue = parseInt(yearOfPlentyCards.value);
+		var selections = ["sheep", "stone"];
+		playYearOfPlenty();
+		submitPlentyResources();
+		expect(parseInt(yearOfPlentyCards.value)).toBe(beforeValue - 1);
 	});
 	
 	afterEach(function(){
 		for (var key in elementsToMake) {
 			body.removeChild(document.getElementById(key));
 		}	
+		if (document.getElementById("outerBox") != null) {
+			body.removeChild(document.getElementById("outerBox"));
+		}
 	});
 });
